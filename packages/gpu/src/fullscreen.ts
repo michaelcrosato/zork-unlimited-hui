@@ -12,6 +12,10 @@ export interface FullscreenPassOptions {
   blend?: GPUBlendState;
   sampler?: GPUSamplerDescriptor;
   label?: string;
+  /** Match the render pass when drawing into a multisampled attachment. */
+  sampleCount?: number;
+  /** Match the render pass when it carries a depth attachment; the pass never writes depth. */
+  depthFormat?: GPUTextureFormat;
 }
 
 const FULLSCREEN_VERTEX = /* wgsl */ `
@@ -60,6 +64,8 @@ export class FullscreenPass {
         targets: [{ format: options.format ?? gpu.format, ...(options.blend ? { blend: options.blend } : {}) }],
       },
       primitive: { topology: "triangle-list" },
+      ...(options.sampleCount && options.sampleCount > 1 ? { multisample: { count: options.sampleCount } } : {}),
+      ...(options.depthFormat ? { depthStencil: { format: options.depthFormat, depthWriteEnabled: false, depthCompare: "always" } } : {}),
     });
     if (this.textureCount === 0) this.bind([]);
   }

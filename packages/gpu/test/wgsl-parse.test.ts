@@ -15,17 +15,26 @@ function wgslFiles(dir: string): string[] {
     .filter((file) => !file.includes(`${sep}node_modules${sep}`));
 }
 
+const isLibrary = (file: string): boolean => file.split(sep).includes("lib");
+
+/**
+ * Include libraries: `packages/gpu/src/wgsl/lib/<name>.wgsl` is included as
+ * `<name>`; an interface's own `uis/<slug>/wgsl/lib/<name>.wgsl` as `<slug>/<name>`.
+ */
 function libraries(): Record<string, string> {
   const libs: Record<string, string> = {};
   for (const file of wgslFiles(libDir)) {
     libs[relative(libDir, file).replace(/\.wgsl$/, "").replaceAll("\\", "/")] = readFileSync(file, "utf8");
   }
+  const uisDir = join(repoRoot, "uis");
+  for (const file of wgslFiles(uisDir).filter(isLibrary)) {
+    const [slug] = relative(uisDir, file).split(sep);
+    libs[`${slug}/${file.slice(file.lastIndexOf(sep) + 1).replace(/\.wgsl$/, "")}`] = readFileSync(file, "utf8");
+  }
   return libs;
 }
 
-const shaders = [...wgslFiles(join(repoRoot, "packages")), ...wgslFiles(join(repoRoot, "uis"))].filter(
-  (file) => !file.startsWith(libDir),
-);
+const shaders = [...wgslFiles(join(repoRoot, "packages")), ...wgslFiles(join(repoRoot, "uis"))].filter((file) => !isLibrary(file));
 
 describe("every WGSL shader in the repo", () => {
   it("has at least one shader to check", () => {

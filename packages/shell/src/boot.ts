@@ -152,8 +152,18 @@ export async function bootUi(spec: UiSpec): Promise<void> {
       act(id);
     }
   });
+  // A click is a press and release within a few pixels; anything longer is a
+  // drag the interface may use for its own camera or scrolling.
+  let press: { x: number; y: number } | null = null;
   canvas.addEventListener("pointerdown", (event) => {
-    if (!instance.hit) return;
+    if (event.button !== 0) return;
+    press = { x: event.clientX, y: event.clientY };
+  });
+  canvas.addEventListener("pointerup", (event) => {
+    if (!press || !instance.hit) return;
+    const moved = Math.hypot(event.clientX - press.x, event.clientY - press.y);
+    press = null;
+    if (moved > 6) return;
     const rect = canvas.getBoundingClientRect();
     const id = instance.hit(event.clientX - rect.left, event.clientY - rect.top);
     if (id) act(id);
@@ -166,12 +176,14 @@ export async function bootUi(spec: UiSpec): Promise<void> {
 
   const readback = async (resolve: (sample: HuiSample) => void): Promise<void> => {
     const { device } = gpu;
+    // A 256-pixel-wide centre block: wide enough to see real detail, and 1024
+    // bytes per row satisfies the 256-byte copy alignment for 8-bit formats.
     const texture = gpu.currentTexture();
-    const width = Math.min(64, texture.width);
-    const height = Math.min(64, texture.height);
+    const width = Math.min(256, texture.width);
+    const height = Math.min(256, texture.height);
     const x = Math.max(0, Math.floor(texture.width / 2 - width / 2));
     const y = Math.max(0, Math.floor(texture.height / 2 - height / 2));
-    const bytesPerRow = 256;
+    const bytesPerRow = 1024;
     const buffer = device.createBuffer({ size: bytesPerRow * height, usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ });
     const encoder = device.createCommandEncoder();
     encoder.copyTextureToBuffer({ texture, origin: { x, y } }, { buffer, bytesPerRow }, { width, height });

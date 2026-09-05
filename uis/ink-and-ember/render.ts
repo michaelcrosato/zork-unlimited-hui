@@ -12,7 +12,7 @@ import {
 } from "@hui/gpu";
 import type { UiContext, UiInstance } from "@hui/shell";
 import { effectsFor, type InkEffects } from "./effects.ts";
-import { blockAt, composePage, type BlockKind, type Ink, type PageBlock, type PageModel } from "./page.ts";
+import { blockAt, composePage, type BlockKind, type Ink, type PageBlock, type PageModel } from "@hui/shell";
 import parchmentWgsl from "./wgsl/parchment.wgsl?raw";
 import inkPostWgsl from "./wgsl/ink-post.wgsl?raw";
 

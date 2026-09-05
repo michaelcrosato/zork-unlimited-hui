@@ -1,0 +1,6 @@
+{
+  "title": "Cartographer",
+  "tagline": "The New York overworld as a lit map table: compute-generated terrain, roads draped over the hills, towns as beacons, fog of war that lifts as you travel, and a clock-driven sky.",
+  "techniques": ["compute height field", "instanced geometry", "MSAA 4x", "fog-of-war texture", "clock-driven lighting", "screen-space SDF labels"],
+  "accent": "#74cbe2"
+}

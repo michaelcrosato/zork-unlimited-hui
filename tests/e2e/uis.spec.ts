@@ -26,9 +26,11 @@ for (const ui of uis) {
       test(`renders on the GPU and responds to an action (${client})`, async ({ page }) => {
         const errors = await collectErrors(page);
         await page.goto(`/uis/${ui.slug}/?client=${client}`);
-        await page.waitForFunction(() => window.__hui?.ready === true || window.__hui?.error !== null, null, {
-          timeout: 45_000,
-        });
+        await page.waitForFunction(
+          () => window.__hui !== undefined && (window.__hui.ready === true || window.__hui.error !== null),
+          null,
+          { timeout: 45_000 },
+        );
         const boot = await page.evaluate(() => ({
           error: window.__hui!.error,
           hasGpu: "gpu" in navigator,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createMockClient, type Scene } from "@hui/core";
-import { composePage, type PageBlock } from "../page.ts";
+import { blockAt, composePage, type PageBlock } from "@hui/shell";
 
 const measure = (_ch: string, size: number) => size * 0.5;
 const desktop = { width: 1440, height: 900 };
@@ -105,10 +105,26 @@ describe("composePage", () => {
     expect(Math.abs(page.column.x + page.column.width / 2 - 1280)).toBeLessThan(1);
   });
 
-  it("shows the pressure tracks as notes in the quest", () => {
+  it("shows the pressure tracks in the quest", () => {
     const page = composePage(chapel(), desktop, measure);
     const pressure = page.blocks.filter((b) => b.kind === "pressure");
     expect(pressure.length).toBe(1);
     expect(pressure[0]!.text).toContain("Tide");
+  });
+
+  it("can place the column explicitly and drop vitals and notes for a side panel", () => {
+    const page = composePage(overworld(), desktop, measure, {}, { column: { x: 1000, width: 400 }, top: 40, vitals: false, notes: false });
+    expect(page.column).toEqual({ x: 1000, width: 400 });
+    expect(page.blocks[0]!.y).toBe(40);
+    expect(kinds(page.blocks)).not.toContain("vitals");
+    expect(kinds(page.blocks)).not.toContain("note");
+    for (const block of page.blocks) expect(block.x + block.width).toBeLessThanOrEqual(1400.01);
+  });
+
+  it("finds the clickable block under a point", () => {
+    const page = composePage(overworld(), desktop, measure);
+    const choice = page.blocks.find((b) => b.kind === "choice")!;
+    expect(blockAt(page, choice.x + 5, choice.y + 2)?.actionId).toBe(choice.actionId);
+    expect(blockAt(page, 5, 5)).toBeNull();
   });
 });
