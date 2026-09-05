@@ -1,0 +1,12 @@
+{
+  "name": "@hui/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Scene model, GameClient contract, mock client, and the zork-unlimited adapter.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  }
+}

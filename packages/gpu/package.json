@@ -1,0 +1,12 @@
+{
+  "name": "@hui/gpu",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "WebGPU toolkit shared by every UI: device, SDF text, fullscreen passes, ping-pong targets, compute particles, WGSL libraries.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  }
+}

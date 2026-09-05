@@ -1,0 +1,12 @@
+{
+  "name": "@hui/shell",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Page shell shared by every UI: client boot, frame loop, accessibility mirror, input, HUD, e2e hooks.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  }
+}

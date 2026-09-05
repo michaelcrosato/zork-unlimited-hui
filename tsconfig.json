@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["@webgpu/types", "vite/client", "node"],
+    "paths": {
+      "@hui/core": ["./packages/core/src/index.ts"],
+      "@hui/core/*": ["./packages/core/src/*"],
+      "@hui/gpu": ["./packages/gpu/src/index.ts"],
+      "@hui/gpu/*": ["./packages/gpu/src/*"],
+      "@hui/shell": ["./packages/shell/src/index.ts"],
+      "@hui/shell/*": ["./packages/shell/src/*"],
+      "@zork/*": ["../zork-unlimited/src/*"]
+    }
+  },
+  "include": [
+    "build",
+    "packages/*/src",
+    "packages/*/test",
+    "uis/*/*.ts",
+    "uis/*/**/*.ts",
+    "tests",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "types"
+  ],
+  "exclude": ["node_modules", "dist", "packages/core/src/zork/adapter.ts", "packages/core/src/zork/**/live-*.ts"]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "zork-unlimited-hui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Human UIs for zork-unlimited: a gallery of WebGPU interfaces that run on top of the deterministic text-RPG engine.",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.5.2",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "new-ui": "node scripts/new-ui.mjs",
+    "engine:where": "node scripts/engine-path.mjs"
+  },
+  "dependencies": {
+    "@hui/core": "workspace:*",
+    "@hui/gpu": "workspace:*",
+    "@hui/shell": "workspace:*"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^22.7.0",
+    "@webgpu/types": "^0.1.72",
+    "jsdom": "^29.1.1",
+    "typescript": "^5.6.0",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0",
+    "wgsl_reflect": "^1.5.0",
+    "yaml": "^2.9.0",
+    "zod": "^3.23.8"
+  }
+}

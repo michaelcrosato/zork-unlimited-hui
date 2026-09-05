@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zork-unlimited-hui · interface gallery</title>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; background: #07090c; color: #e9e6de; font: 16px/1.5 Georgia, serif; }
+      main { max-width: 64rem; margin: 0 auto; padding: 3rem 1.5rem; }
+      h1 { font: 800 clamp(2rem, 6vw, 3.5rem)/1 "Arial Narrow", "Roboto Condensed", sans-serif; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 0.5rem; }
+      p.lede { color: #99a2a5; margin: 0 0 2.5rem; max-width: 42rem; }
+      ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }
+      li a { display: block; border: 1px solid #334249; padding: 1.25rem; text-decoration: none; color: inherit; border-left-width: 4px; background: #0d1519; }
+      li a:hover, li a:focus-visible { background: #111b20; outline: 1px solid var(--accent, #74cbe2); }
+      li strong { display: block; font: 700 1.25rem/1.2 "Arial Narrow", "Roboto Condensed", sans-serif; text-transform: uppercase; letter-spacing: 0.04em; }
+      li span { display: block; color: #99a2a5; margin-top: 0.35rem; }
+      li small { display: block; margin-top: 0.75rem; font: 0.72rem/1.4 "Cascadia Mono", Consolas, monospace; color: #74cbe2; }
+      footer { margin-top: 3rem; color: #6c767a; font-size: 0.85rem; }
+      code { font-family: "Cascadia Mono", Consolas, monospace; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>zork-unlimited-hui</h1>
+      <p class="lede">
+        Human interfaces for the zork-unlimited engine. Each entry is a separate WebGPU interpreter over the same
+        game; pick one and play.
+      </p>
+      <ul id="gallery"></ul>
+      <footer id="status"></footer>
+    </main>
+    <script type="module" src="/gallery.ts"></script>
+  </body>
+</html>
