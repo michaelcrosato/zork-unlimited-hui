@@ -1,0 +1,6 @@
+{
+  "title": "Phosphor Diorama",
+  "tagline": "A slow-phosphor terminal in a dark room, with the current scene ray-marched behind the glass: doorways where there are exits, red forms for threats, warm lights for people, fog from pressure.",
+  "techniques": ["ray marching", "phosphor persistence feedback", "separable bloom", "CRT composite", "glitch on damage"],
+  "accent": "#7dff9a"
+}
