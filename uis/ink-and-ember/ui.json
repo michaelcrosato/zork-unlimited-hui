@@ -1,0 +1,6 @@
+{
+  "title": "Ink & Ember",
+  "tagline": "The game as an illuminated manuscript: prose written in wet ink on candlelit parchment, choices as red rubrics, snow and embers answering the story's pressure.",
+  "techniques": ["SDF typography", "compute particles", "procedural parchment", "post-process ink bleed"],
+  "accent": "#b23a2a"
+}

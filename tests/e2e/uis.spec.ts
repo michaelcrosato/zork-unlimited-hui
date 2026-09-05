@@ -68,6 +68,7 @@ for (const ui of uis) {
         }
 
         await page.waitForTimeout(1500);
+        await page.screenshot({ path: `test-results/screens/${ui.slug}-${client}.png` });
         const fps = await page.evaluate(() => window.__hui!.fps);
         expect(fps, "frame rate after the action").toBeGreaterThan(24);
         expect(errors).toEqual([]);

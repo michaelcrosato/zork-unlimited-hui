@@ -1,0 +1,43 @@
+// Dev helper: load one interface in headless Chrome with WebGPU, print console output and GPU info, save a screenshot.
+// Usage: node scripts/screenshot-ui.mjs <slug> [mock|live] [out.png] [actionId,actionId,...]  (needs `pnpm preview` running)
+import { chromium } from "@playwright/test";
+
+const slug = process.argv[2] ?? "ink-and-ember";
+const client = process.argv[3] ?? "mock";
+const out = process.argv[4] ?? `test-results/screens/${slug}-${client}.png`;
+const actions = (process.argv[5] ?? "").split(",").filter(Boolean);
+
+const browser = await chromium.launch({
+  channel: "chrome",
+  headless: true,
+  args: ["--enable-unsafe-webgpu", "--ignore-gpu-blocklist", "--enable-features=Vulkan"],
+});
+const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
+page.on("console", (m) => console.log("[console]", m.type(), m.text().slice(0, 600)));
+page.on("pageerror", (e) => console.log("[pageerror]", String(e).slice(0, 600)));
+await page.goto(`http://127.0.0.1:4173/uis/${slug}/?client=${client}`);
+await page.waitForFunction(() => window.__hui?.ready === true || window.__hui?.error, null, { timeout: 30000 });
+for (const id of actions) {
+  const r = await page.evaluate((id) => window.__hui.act(id), id);
+  console.log("[act]", id, JSON.stringify(r));
+}
+await page.waitForTimeout(3500);
+const info = await page.evaluate(async () => {
+  const h = window.__hui;
+  const s = await h.sample();
+  const adapter = await navigator.gpu.requestAdapter();
+  const c = document.querySelector("canvas");
+  return {
+    sample: s,
+    frames: h.frames,
+    fps: Math.round(h.fps),
+    error: h.error,
+    adapter: adapter?.info ? { vendor: adapter.info.vendor, architecture: adapter.info.architecture, description: adapter.info.description } : null,
+    canvas: { w: c.width, h: c.height, cssW: c.clientWidth, cssH: c.clientHeight },
+    scene: { phase: h.scene().phase, place: h.scene().place.name, actions: h.scene().actions.length },
+  };
+});
+console.log(JSON.stringify(info, null, 1));
+await page.screenshot({ path: out });
+console.log("screenshot:", out);
+await browser.close();

@@ -92,7 +92,7 @@ export class ParticleSystem {
       layout: this.renderPipeline.getBindGroupLayout(0),
       entries: [
         { binding: 0, resource: { buffer: this.params.buffer } },
-        { binding: 1, resource: { buffer: this.buffer } },
+        { binding: 2, resource: { buffer: this.buffer } },
       ],
     });
   }

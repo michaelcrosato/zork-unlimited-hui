@@ -33,7 +33,10 @@ struct Particle {
 };
 
 @group(0) @binding(0) var<uniform> p: ParticleParams;
+// The compute stage owns the pool read-write; the vertex stage may only read
+// storage, so the same buffer is bound again read-only at binding 2.
 @group(0) @binding(1) var<storage, read_write> particles: array<Particle>;
+@group(0) @binding(2) var<storage, read> particlesView: array<Particle>;
 
 fn spawn(index: u32, particle: ptr<function, Particle>) {
   let h = hash22(vec2f(f32(index) * 0.731 + p.seed, p.time * 13.7));
@@ -96,7 +99,7 @@ var<private> QUAD: array<vec2f, 6> = array<vec2f, 6>(
 
 @vertex
 fn vs(@builtin(vertex_index) vertexIndex: u32, @builtin(instance_index) instanceIndex: u32) -> ParticleVertex {
-  let particle = particles[instanceIndex];
+  let particle = particlesView[instanceIndex];
   let corner = QUAD[vertexIndex % 6u];
   let lifeT = clamp(particle.age / max(particle.life, 0.001), 0.0, 1.0);
   let fade = sin(lifeT * 3.14159);
