@@ -7,6 +7,8 @@ export default defineConfig({
       "@hui/core": fileURLToPath(new URL("./packages/core/src/index.ts", import.meta.url)),
       "@hui/gpu": fileURLToPath(new URL("./packages/gpu/src/index.ts", import.meta.url)),
       "@hui/shell": fileURLToPath(new URL("./packages/shell/src/index.ts", import.meta.url)),
+      // The package ships a CommonJS main under "type": "module"; point at its ESM build.
+      wgsl_reflect: fileURLToPath(new URL("./node_modules/wgsl_reflect/wgsl_reflect.module.js", import.meta.url)),
     },
   },
   test: {
