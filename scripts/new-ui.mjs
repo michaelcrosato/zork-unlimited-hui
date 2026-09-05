@@ -8,8 +8,9 @@ import { fileURLToPath } from "node:url";
 
 const repoRoot = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const slug = process.argv[2];
-if (!slug || !/^[a-z][a-z0-9-]*$/.test(slug)) {
-  console.error("usage: pnpm new-ui <slug> [\"Title\"]   (slug: lowercase letters, digits, hyphens)");
+// A leading underscore marks a scratch interface: gitignored and left out of the gallery.
+if (!slug || !/^_?[a-z][a-z0-9-]*$/.test(slug)) {
+  console.error("usage: pnpm new-ui <slug> [\"Title\"]   (slug: lowercase letters, digits, hyphens; leading _ for scratch)");
   process.exit(1);
 }
 const title = process.argv[3] ?? slug.replace(/(^|-)(\w)/g, (_, dash, ch) => `${dash ? " " : ""}${ch.toUpperCase()}`);

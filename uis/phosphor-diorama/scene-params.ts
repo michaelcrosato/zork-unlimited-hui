@@ -73,7 +73,7 @@ export function sceneParams(scene: Scene): DioramaParams {
     enemyCount: danger >= 0.5 ? Math.min(4, 1 + Math.floor((danger - 0.5) * 4)) : 0,
     npcCount,
     objects: Math.min(6, scene.actions.filter((a) => a.primary && (a.kind === "use" || a.kind === "observe")).length),
-    fog: clamp01(0.15 + 0.6 * pressure + 0.25 * danger),
+    fog: clamp01(0.08 + 0.6 * pressure + 0.25 * danger),
     sunAngle: (hour / 24) * Math.PI * 2,
     night: clamp01(0.5 - elevation * 1.5),
     glitch: scene.ending?.death ? 1 : 0,

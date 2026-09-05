@@ -163,10 +163,13 @@ fn fs(@location(0) uv: vec2f) -> @location(0) vec4f {
     }
 
     let sun = max(dot(n, sunDir), 0.0) * shadow(p + n * 0.02, sunDir) * dayLight;
-    let skyLight = (0.5 + 0.5 * n.y) * mix(0.35, 0.08, night);
-    let occlusion = 1.0 - steps / f32(STEPS) * 0.6;
-    colour = albedo * (sun * vec3f(1.0, 0.95, 0.85) * 1.3 + skyLight * sky * 1.4) * occlusion;
-    colour += emissive(p) * 1.6;
+    let skyLight = (0.5 + 0.5 * n.y) * mix(0.3, 0.07, night);
+    let occlusion = 1.0 - steps / f32(STEPS) * 0.7;
+    // A lamp by the operator's chair keeps the near room legible at night.
+    let lampVec = vec3f(1.6, 1.9, 2.4) - p;
+    let lamp = max(dot(n, normalize(lampVec)), 0.0) / (1.0 + 0.18 * dot(lampVec, lampVec)) * mix(0.6, 1.4, u.mood.x);
+    colour = albedo * (sun * vec3f(1.0, 0.95, 0.85) * 1.8 + skyLight * sky * 1.3 + lamp * vec3f(1.0, 0.8, 0.55)) * occlusion;
+    colour += emissive(p) * 1.8;
     // Moonlight tint at night.
     colour = mix(colour, colour * vec3f(0.6, 0.7, 1.05), night * 0.5);
   } else {

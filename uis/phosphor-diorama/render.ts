@@ -129,8 +129,10 @@ export async function renderPhosphorDiorama(ctx: UiContext): Promise<UiInstance>
 
   return {
     onScene: applyScene,
-    frame(_dt, time) {
+    frame(dt, time) {
       now = time;
+      // Phosphor falls to 2% in 0.6 s whatever the frame rate.
+      const decay = Math.pow(0.02, Math.max(dt, 1 / 240) / 0.6);
       const size = gpu.size();
       if (!page || size.cssWidth !== viewport.width || size.cssHeight !== viewport.height) compose();
       ensureTargets();
@@ -172,7 +174,7 @@ export async function renderPhosphorDiorama(ctx: UiContext): Promise<UiInstance>
       textPass.end();
 
       // 3. Phosphor persistence: fresh text over the decayed previous frame.
-      persist.uniforms.set(0, [0.9, 0, 0, 0]).upload();
+      persist.uniforms.set(0, [decay, 0, 0, 0]).upload();
       persist.bind([textTex!.createView(), phosphor!.readView()]);
       const persistPass = encoder.beginRenderPass({
         label: "persist",
