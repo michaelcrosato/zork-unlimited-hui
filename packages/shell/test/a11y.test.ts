@@ -72,6 +72,18 @@ describe("accessibility mirror", () => {
     expect(root.querySelectorAll("button")).toHaveLength(chapel.actions.length);
   });
 
+  it("includes full action details and expedition information", () => {
+    const scene = chapelScene();
+    scene.actions[0]!.detail = "A long authored command must stay available.";
+    scene.goal.guidance = "Follow the beacon.";
+    scene.ending = { title: "A close", text: "The full ending.", death: false };
+    const root = document.createElement("div");
+    mountA11yMirror(root, () => {}).update(scene);
+    for (const text of [scene.actions[0]!.detail, scene.goal.guidance, scene.ending.text, ...scene.journal]) expect(root.textContent).toContain(text);
+    const button = root.querySelector("button")!;
+    expect(root.querySelector(`#${button.getAttribute("aria-describedby")}`)?.textContent).toContain(scene.actions[0]!.detail);
+  });
+
   it("is hidden visually but not from assistive technology", () => {
     const root = document.createElement("div");
     mountA11yMirror(root, () => {}).update(overworldScene());

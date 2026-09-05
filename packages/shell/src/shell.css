@@ -103,6 +103,24 @@ body {
   gap: 0.75rem;
 }
 
+.hui-hud select {
+  pointer-events: auto;
+  max-width: 13rem;
+  padding: 4px 24px 4px 8px;
+  border: 1px solid #334249;
+  border-radius: 3px;
+  background: #0d1519;
+  color: #e9e6de;
+  font: inherit;
+}
+
+@media (max-width: 600px) {
+  .hui-hud { gap: 0.65rem; padding: 0.5rem 0.75rem; font-size: 10px; }
+  .hui-hud select { max-width: 10rem; }
+  .hui-hud .hui-hud-fps { display: none; }
+  .hui-hud-notice { position: absolute; top: 40px; left: 12px; max-width: calc(100vw - 24px) !important; }
+}
+
 .hui-hud-fps {
   margin-left: auto;
   color: #a7c875;
@@ -147,4 +165,36 @@ body {
 .hui-fatal code {
   font-family: "Cascadia Mono", Consolas, monospace;
   color: #74cbe2;
+}
+
+.hui-stage-controls {
+  position: absolute;
+  top: 65px;
+  right: 2.5%;
+  z-index: 4;
+  display: flex;
+  gap: 12px;
+}
+.hui-stage-controls button {
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  padding: 5px 0;
+  background: transparent;
+  color: #c5fc3d;
+  font: 11px/1.2 "Cascadia Mono", Consolas, monospace;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.hui-stage-controls button:disabled { opacity: 0.3; cursor: default; }
+.hui-stage-controls button:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+[data-showpiece="paint"] .hui-stage-controls button { color: #843b24; }
+[data-showpiece="paint"] .hui-hud { background: #e7e0cf; color: #4e514e; }
+[data-showpiece="paint"] .hui-hud a { color: #874c2d; }
+[data-showpiece="paint"] .hui-hud select { color: #26383d; border-color: #b9b19e; background: #f1ecde; }
+[data-showpiece="paint"] .hui-hud-fps { color: #5f6937; }
+[data-showpiece="energy"] .hui-hud { background: #070910; }
+[data-showpiece="energy"] .hui-hud a { color: #c5fc3d; }
+@media (max-width: 759px) {
+  .hui-stage-controls { top: 43px; right: 16px; gap: 16px; }
+  .hui-stage-controls button { font-size: 9px; }
 }

@@ -1,0 +1,10 @@
+{
+  "title": "Lantern Theatre",
+  "tagline": "Every room, a new act. A candlelit paper theatre above a living script and a book of choices.",
+  "techniques": [
+    "procedural paper scenery",
+    "compute stage dust",
+    "SDF script and cue cards"
+  ],
+  "accent": "#ffa15c"
+}

@@ -13,3 +13,5 @@ export type { ActResult, GameClient } from "./client.ts";
 export { SceneStore } from "./client.ts";
 export { humanizeId } from "./humanize.ts";
 export { createMockClient } from "./mock/mock-client.ts";
+export { diceFromNarrations } from "./presentation.ts";
+export type { DiceRoll, Presentation } from "./presentation.ts";

@@ -17,6 +17,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:visual": "playwright test tests/e2e/showpiece-visual.spec.ts",
+    "test:report": "playwright show-report --host 127.0.0.1",
     "new-ui": "node scripts/new-ui.mjs",
     "engine:where": "node scripts/engine-path.mjs"
   },

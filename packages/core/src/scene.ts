@@ -90,6 +90,8 @@ export interface WorldEdge {
 }
 
 export interface Scene {
+  /** Ephemeral presentation of the last accepted action; absent on load/reset. */
+  presentation?: import("./presentation.ts").Presentation;
   /** Changes whenever the place or the phase changes; drives transitions. */
   sceneId: string;
   phase: Phase;

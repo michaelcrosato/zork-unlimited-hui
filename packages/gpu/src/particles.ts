@@ -131,4 +131,9 @@ export class ParticleSystem {
     pass.setBindGroup(0, this.renderBindGroup);
     pass.draw(6, this.count);
   }
+
+  destroy(): void {
+    this.buffer.destroy();
+    this.params.buffer.destroy();
+  }
 }

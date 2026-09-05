@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./gpu-test.ts";
 import { fileURLToPath } from "node:url";
 import { listUis } from "../../vite-plugins/gallery-plugin.ts";
 import { engineLinked } from "../../scripts/engine-path.mjs";

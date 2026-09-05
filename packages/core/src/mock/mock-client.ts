@@ -1,4 +1,5 @@
 import { SceneStore, type ActResult, type GameClient } from "../client.ts";
+import type { Presentation } from "../presentation.ts";
 import type { Action, Phase, Pressure, Scene, WorldEdge, WorldNode } from "../scene.ts";
 import {
   BACKGROUNDS,
@@ -89,9 +90,11 @@ class MockClient implements GameClient {
   readonly kind = "mock" as const;
   private state = initialState();
   private readonly store = new SceneStore();
+  private presentation: Presentation | undefined;
+  private presentationSequence = 0;
 
   scene(): Scene {
-    return buildScene(this.state);
+    return { ...buildScene(this.state), ...(this.presentation ? { presentation: this.presentation } : {}) };
   }
 
   subscribe(listener: (scene: Scene) => void): () => void {
@@ -99,6 +102,7 @@ class MockClient implements GameClient {
   }
 
   reset(): void {
+    this.presentation = undefined;
     this.state = initialState();
     this.store.emit(this.scene());
   }
@@ -107,9 +111,12 @@ class MockClient implements GameClient {
     const action = this.scene().actions.find((candidate) => candidate.id === id);
     if (!action) return { ok: false, message: "That action is not available." };
     if (action.disabledReason) return { ok: false, message: action.disabledReason };
+    const hp = this.state.hp;
     const message = this.apply(id);
     this.state.result = message;
     this.state.journal = [message, ...this.state.journal].slice(0, 40);
+    this.presentation = { sequence: ++this.presentationSequence, actionId: id, label: action.label, kind: action.kind,
+      narrations: [message], rolls: [], damageTaken: Math.max(0, hp - this.state.hp) };
     this.store.emit(this.scene());
     return { ok: true, message };
   }

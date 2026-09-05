@@ -1,0 +1,10 @@
+{
+  "title": "Astral Orrery",
+  "tagline": "Read the stars. An engraved celestial instrument turns your next choices into a constellation of possible paths.",
+  "techniques": [
+    "procedural star field",
+    "orbital SDF instruments",
+    "clickable action satellites"
+  ],
+  "accent": "#e6ba6e"
+}

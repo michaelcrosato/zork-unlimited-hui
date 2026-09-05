@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { basename } from "node:path";
 import { describe, expect, it } from "vitest";
-import { MAX_LABEL_LENGTH, type Action, type GameClient, type Scene } from "@hui/core";
+import { MAX_LABEL_LENGTH, diceFromNarrations, type Action, type GameClient, type Scene } from "@hui/core";
 import { engineStatus } from "../../../scripts/engine-path.mjs";
 
 const status = engineStatus();
@@ -153,5 +153,36 @@ describe.skipIf(!status.present)("zork-unlimited adapter (live engine)", () => {
     expect(result.ok).toBe(false);
     expect(client.scene().sceneId).toBe(before.sceneId);
     expect(client.scene().result).toBe(before.result);
+  });
+
+  it("presents only the current attack's seeded dice and drops them on reload", async () => {
+    const storage=memoryStorage(),client=await liveClient(storage);
+    enterQuest(client);
+    step(client,a=>a.kind==="use" || a.kind==="move");
+    step(client,a=>a.id==="q:go_north");
+    let after=client.scene();
+    for(let i=0;i<4 && !after.presentation?.rolls.length;i++) after=step(client,a=>a.kind==="engage");
+    const event=after.presentation!;
+    expect(event.rolls.map(r=>r.role)).toEqual(["player","enemy"]);
+    expect(event.rolls).toEqual(diceFromNarrations(event.narrations));
+    expect(event.damageTaken).toBe(event.rolls[1]!.total);
+    for(const roll of event.rolls) { expect(roll.value).toBeGreaterThanOrEqual(1); expect(roll.value).toBeLessThanOrEqual(6); expect(after.result).toContain(roll.detail); }
+    expect((await liveClient(storage)).scene().presentation).toBeUndefined();
+    step(client,a=>a.kind==="observe"); expect(client.scene().presentation?.rolls).toEqual([]);
+  });
+
+  it("exposes an actual d20 from the authored DRIVE signal skill check", async () => {
+    const client=await liveClient(memoryStorage()); enterQuest(client);
+    step(client,a=>a.kind==="use" || a.kind==="move");
+    step(client,a=>a.id==="q:talk_houndsman");
+    step(client,a=>/^Ask DRIVE /i.test(a.label)); step(client,a=>/^CHOOSE DRIVE/i.test(a.label));
+    step(client,a=>/^LEAVE /i.test(a.label));
+    step(client,a=>/^take .*signal-and-rope/i.test(a.label));
+    step(client,a=>a.id==="q:go_north");
+    const after=step(client,a=>/\bfire drive shutter signal/i.test(a.label));
+    const rolls=after.presentation!.rolls;
+    expect(rolls).toHaveLength(1); expect(rolls[0]!.sides).toBe(20); expect(rolls[0]!.role).toBe("check");
+    expect(rolls[0]!.total).toBe(rolls[0]!.value+rolls[0]!.modifier);
+    expect(after.result).toContain(rolls[0]!.detail);
   });
 });

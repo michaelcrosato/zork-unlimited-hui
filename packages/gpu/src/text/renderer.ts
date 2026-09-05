@@ -108,6 +108,11 @@ export class TextRenderer {
     return this.count;
   }
 
+  destroy(): void {
+    this.instanceBuffer.destroy();
+    this.uniforms.buffer.destroy();
+  }
+
   /**
    * Queue a laid-out block at (x, y) in CSS pixels. `size` must match the size
    * the layout was measured with. `perGlyph` may override style per glyph, for

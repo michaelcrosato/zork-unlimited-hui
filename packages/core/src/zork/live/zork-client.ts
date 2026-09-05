@@ -24,6 +24,7 @@ import { buildOverworldActions } from "./overworld-actions.ts";
 import { QuestSession } from "./quest-session.ts";
 import { BROWSER_QUEST_SEED, clearJourney, loadJourney, persistQuest, persistRoad, type ActiveQuestSave } from "./save.ts";
 import { presentJourneyChoice, presentStoryChoice } from "./story-scene.ts";
+import { diceFromNarrations, type Presentation } from "../../presentation.ts";
 import { buildWorldGraph } from "./world-graph.ts";
 
 type Runner = () => void;
@@ -44,6 +45,9 @@ class ZorkClient implements GameClient {
   private log: string[];
   private registry = new Map<string, Runner>();
   private cached: Scene | null = null;
+  private presentation: Presentation | undefined;
+  private presentationSequence = 0;
+  private actionNarrations: string[] = [];
 
   constructor(
     content: ZorkContent,
@@ -78,15 +82,19 @@ class ZorkClient implements GameClient {
   }
 
   reset(): void {
+    this.presentation = undefined;
     this.startNewJourney();
     this.invalidate();
     this.store.emit(this.scene());
   }
 
   act(id: string): ActResult {
-    this.scene();
+    const prior = this.scene();
+    const action = prior.actions.find(a => a.id === id);
+    if (action?.disabledReason) return { ok: false, message: action.disabledReason };
     const run = this.registry.get(id);
     if (!run) return { ok: false, message: "That action is not available." };
+    this.actionNarrations = [];
     const before = this.log[0];
     try {
       run();
@@ -95,6 +103,11 @@ class ZorkClient implements GameClient {
       this.invalidate();
       return { ok: false, message: `Could not continue: ${message}` };
     }
+    this.invalidate();
+    const damageTaken = Math.max(0, prior.vitals.hp - this.scene().vitals.hp);
+    const narrations = [...this.actionNarrations];
+    this.presentation = action ? { sequence: ++this.presentationSequence, actionId: id, label: action.label, kind: action.kind,
+      narrations, rolls: diceFromNarrations(narrations), damageTaken } : undefined;
     this.invalidate();
     this.store.emit(this.scene());
     return { ok: true, message: this.log[0] !== before ? (this.log[0] ?? "") : this.scene().result };
@@ -203,6 +216,7 @@ class ZorkClient implements GameClient {
   private chooseQuest(id: string, label: string): void {
     if (!this.quest || !this.activeSave || !this.activeQuest) return;
     const outcome = this.quest.choose(id);
+    this.actionNarrations = outcome.narration;
     const view = this.quest.view();
     const lines = [`> ${label}`, ...outcome.narration, ...(outcome.rejection ? [`(${outcome.rejection})`] : [])];
     if (outcome.ok) {
@@ -323,6 +337,7 @@ class ZorkClient implements GameClient {
     const journey = this.world.journey();
     const town = view.current;
     const base = {
+      ...(this.presentation ? { presentation: this.presentation } : {}),
       journal: this.log,
       saveStatus: this.saveStatus,
       goal: {
@@ -336,7 +351,7 @@ class ZorkClient implements GameClient {
       dialogue: null as Scene["dialogue"],
       danger: 0.05,
       ending: null as Scene["ending"],
-      result: this.log[0] ?? `You are in ${town.name}.`,
+      result: this.presentation?.narrations.length ? this.presentation.narrations.join("\n\n") : this.log[0] ?? `You are in ${town.name}.`,
     };
 
     if (this.recoveryError) {
@@ -501,7 +516,8 @@ class ZorkClient implements GameClient {
     const enemies = q.enemies.length;
     const peak = pressure.reduce((max, track) => Math.max(max, track.value), 0);
     const danger = Math.min(1, (enemies > 0 ? 0.55 : 0.08) + Math.min(0.3, peak * 0.08) + (hpMax ? (1 - q.stats.hp / hpMax) * 0.3 : 0));
-    const latest = this.log.find((entry) => !entry.startsWith("> ")) ?? `Entered ${q.title}.`;
+    const latest = this.presentation?.narrations.length ? this.presentation.narrations.join("\n\n")
+      : this.log.find((entry) => !entry.startsWith("> ")) ?? `Entered ${q.title}.`;
     const inventory = q.inventory.map(humanizeId);
     const prose = q.text.split(/\n+/).map((paragraph) => paragraph.trim()).filter(Boolean);
     if (inventory.length > 0) prose.push(`You carry: ${inventory.join(", ")}.`);

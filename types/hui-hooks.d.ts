@@ -22,6 +22,17 @@ declare global {
     act(id: string): ActResult;
     sample(): Promise<HuiSample>;
     error: string | null;
+    /** Read-only cinematic state; actual rolls come from the accepted engine action. */
+    presentation?(): {
+      beat: string; age: number; transition: number; impact: number; progress: number; seed: number;
+      combat: boolean; revealed: boolean; rolls: import("@hui/core").DiceRoll[];
+      particles: number; mode: "paint" | "energy"; reducedMotion: boolean;
+    };
+    /** Read-only CSS-pixel geometry from interfaces with scrolling GPU panels. */
+    layout?(): {
+      panels: { id: string; x: number; y: number; width: number; height: number; scroll: number; maxScroll: number }[];
+      actions: { id: string; x: number; y: number; width: number; height: number; disabled: boolean }[];
+    };
   }
 
   interface Window {

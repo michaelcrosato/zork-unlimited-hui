@@ -1,0 +1,12 @@
+{
+  "title": "Rift Overdrive",
+  "tagline": "Punch through a luminous rift. A quarter-million shards, impossible architecture and cinematic dice make every turn hit harder.",
+  "techniques": [
+    "ray-marched architecture",
+    "262,144 compute shards",
+    "HDR bloom",
+    "chromatic shockwaves",
+    "3D dice / impact choreography"
+  ],
+  "accent": "#c5fc3d"
+}

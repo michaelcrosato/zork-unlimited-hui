@@ -1,0 +1,10 @@
+{
+  "title": "Tideglass",
+  "tagline": "Keep your bearings in deep water. A living glass instrument beside your story, choices and expedition record.",
+  "techniques": [
+    "compute wave simulation",
+    "wave-normal lighting",
+    "three-panel expedition desk"
+  ],
+  "accent": "#61e8c2"
+}

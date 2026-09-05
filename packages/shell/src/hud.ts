@@ -20,17 +20,20 @@ export interface Hud {
 export function mountHud(init: HudInit): Hud {
   const bar = document.createElement("header");
   bar.className = "hui-hud";
-  const otherUis = init.gallery.filter((ui) => ui.slug !== init.slug);
-  const switcher = otherUis.length
-    ? `<nav aria-label="Other interfaces">${otherUis
-        .map((ui) => `<a href="/uis/${ui.slug}/?client=${init.clientKind}">${ui.title}</a>`)
-        .join("")}</nav>`
-    : "";
+  const switcher = init.gallery.length
+    ? `<select aria-label="Interface">${init.gallery
+        .map((ui) => `<option value="${ui.slug}"${ui.slug === init.slug ? " selected" : ""}>${ui.title}</option>`)
+        .join("")}</select>`
+    : `<strong>${init.title}</strong>`;
   const otherClient = init.clientKind === "live" ? "mock" : "live";
   const toggle = init.liveAvailable
-    ? `<a class="hui-hud-client" href="?client=${otherClient}">${init.clientKind} world · switch to ${otherClient}</a>`
+    ? `<a class="hui-hud-client" href="?client=${otherClient}">${init.clientKind} · play ${otherClient}</a>`
     : `<span class="hui-hud-client">mock world · engine not linked</span>`;
-  bar.innerHTML = `<a class="hui-hud-home" href="/">zork-unlimited-hui</a><strong>${init.title}</strong>${switcher}${toggle}<span class="hui-hud-fps" aria-label="frames per second">– fps</span><span class="hui-hud-notice" role="status"></span>`;
+  bar.innerHTML = `<a class="hui-hud-home" href="/">Gallery</a>${switcher}${toggle}<span class="hui-hud-fps" aria-label="frames per second">– fps</span><span class="hui-hud-notice" role="status"></span>`;
+  bar.querySelector("select")?.addEventListener("change", (event) => {
+    const slug = (event.target as HTMLSelectElement).value;
+    window.location.assign(`/uis/${slug}/?client=${init.clientKind}`);
+  });
   init.root.append(bar);
   const fps = bar.querySelector<HTMLSpanElement>(".hui-hud-fps")!;
   const notice = bar.querySelector<HTMLSpanElement>(".hui-hud-notice")!;

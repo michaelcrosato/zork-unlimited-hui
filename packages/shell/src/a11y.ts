@@ -46,6 +46,24 @@ export function mountA11yMirror(root: HTMLElement, onAct: (id: string) => void):
       result.textContent = `Latest result: ${scene.result}`;
       live.append(result);
 
+      const record = document.createElement("section");
+      record.setAttribute("aria-label", "Expedition record");
+      const v = scene.vitals;
+      const entries = [
+        `Day ${v.day}, ${v.time}. Health ${v.hp}${v.hpMax === null ? "" : ` of ${v.hpMax}`}. Supplies ${v.supplies}${v.suppliesMax === null ? "" : ` of ${v.suppliesMax}`}. Fatigue ${v.fatigue}.`,
+        v.condition, v.money === null ? null : `Money: ${v.money}`, `Save: ${scene.saveStatus}`,
+        scene.goal.text, scene.goal.guidance, scene.ending?.title, scene.ending?.text,
+        ...scene.pressure.flatMap(track => [`${track.title}: ${track.band} (${track.value})`, track.description, track.next]),
+        ...scene.journal,
+      ];
+      for (const entry of entries) {
+        if (!entry) continue;
+        const p = document.createElement("p");
+        p.textContent = entry;
+        record.append(p);
+      }
+      live.append(record);
+
       list.replaceChildren();
       let number = 0;
       for (const action of scene.actions) {
@@ -54,7 +72,7 @@ export function mountA11yMirror(root: HTMLElement, onAct: (id: string) => void):
         button.type = "button";
         number += action.primary ? 1 : 0;
         button.textContent = action.primary ? `${number}. ${action.label}` : action.label;
-        const notes = [action.terms, action.consequence, action.disabledReason].filter(Boolean);
+        const notes = [action.detail, action.terms, action.consequence, action.disabledReason].filter(Boolean);
         if (notes.length > 0) {
           const note = document.createElement("span");
           note.id = `hui-a11y-${nextId++}`;

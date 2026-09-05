@@ -7,7 +7,7 @@ interpreter that runs on top of the engine's structured observations and legal
 actions and decides only how to *show* them. Any number of interfaces can live
 side by side, and all of them play the same game with the same saves.
 
-Three WebGPU interfaces ship today, each a different answer to "what should a
+Eight WebGPU interfaces ship today, each a different answer to "what should a
 primarily text-based RPG look like on a modern GPU":
 
 | Interface | Idea | Techniques |
@@ -15,9 +15,17 @@ primarily text-based RPG look like on a modern GPU":
 | **Ink & Ember** (`uis/ink-and-ember`) | An illuminated manuscript. Prose is written in wet ink on candlelit parchment; choices are red rubrics; snow and embers answer the story's danger. | SDF typography with per-glyph animation, 120k compute particles, procedural parchment, post-process ink bleed on death |
 | **Cartographer** (`uis/cartographer`) | A lit map table. The 247-town New York road graph as terrain, roads, and beacons; fog of war lifts over a surveyor's chart as you travel; the sky follows the in-game clock. | Compute-generated height field, instanced ribbons and pins, MSAA 4x, fog-of-war texture, camera flights, collision-free SDF labels |
 | **Phosphor Diorama** (`uis/phosphor-diorama`) | A slow-phosphor terminal in a dark room, with the current scene ray-marched behind the glass: doorways where there are exits, red forms for threats, warm lights for people. | Ray marching, phosphor persistence feedback, separable bloom, CRT composite (curvature, fringes, scanlines, glitch) |
+| **Astral Orrery** (`uis/astral-orrery`) | A celestial reading room. Fixed, numbered action satellites surround an engraved astronomical instrument, with story and choices in separate reading panels. | Procedural star field and nebula, orbital SDF rings, instanced clickable instruments, SDF typography |
+| **Lantern Theatre** (`uis/lantern-theatre`) | A panoramic paper theatre with a script and cue cards. Open paths become lit doorways; conversations and danger change the stage lighting. | Procedural velvet and layered scenery, compute stage dust, independent GPU text panels |
+| **Tideglass** (`uis/tideglass`) | An expedition desk. A glass water instrument follows health and supplies beside the story, actions, pressure and journal. Stir its surface with the pointer. | GPU height/velocity wave simulation, ping-pong storage textures, wave-normal lighting, SDF gauges |
+| **The Painted Wild** (`uis/painted-wild`) | A living art print. Ultramarine, vermilion and gold grow into a changing floral composition; choices repaint the world; physical dice settle into the paper. | 512² pigment advection, 65,536 compute brush marks, gilded procedural artwork, organic history transitions, 3D d6/d20 |
+| **Rift Overdrive** (`uis/rift-overdrive`) | A kinetic battle stage. Rotating architectural gates and a quarter-million shards rush through a luminous portal. Combat brings paired dice, shockwaves and impact; completion unfolds the rift. | Ray-marched architecture, 262,144 compute shards, HDR bloom, chromatic shockwaves, fractured travel transitions, 3D d6/d20 |
 
-All three run at the display's refresh rate (144 fps measured headless) on an
-RTX 4070 Super and pass the same GPU test gate.
+All eight use the same live adapter and GPU test gate. The five additions also
+have complete mock and live Wolf-Winter browser journeys, save switching, touch
+scrolling, responsive layout and reduced-motion checks. See
+[the additional-interface notes](docs/additional-interfaces.md) and
+[the cinematic-interface notes](docs/showpiece-interfaces.md).
 
 ## How it fits together
 
@@ -73,22 +81,47 @@ for the game when the engine is linked. Number keys 1–9 fire the numbered
 choices; click a choice to take it; scroll to read; in Cartographer, drag to
 orbit, wheel to zoom, click a town with a road to travel there.
 
+In the five additional interfaces, scroll over a panel to read it independently. Touch
+drag, Page Up/Down and Home/End also scroll; Tab brings the focused action card
+into view. Narrow screens combine the panels into a single reading surface.
+The operating system's reduced-motion preference freezes ambient effects.
+Use the **Interface** menu to switch views; live play keeps the engine's save.
+The Painted Wild and Rift Overdrive present actual live-engine d6 combat and
+d20 skill-check results. **Replay dice** repeats the presentation without taking
+a turn; **Skip motion** ends the current effect. Reduced motion shows settled
+results immediately. Mock combat has fixed damage and does not invent dice.
+
+Direct links with the dev server running:
+
+- [Astral Orrery](http://127.0.0.1:5180/uis/astral-orrery/)
+- [Lantern Theatre](http://127.0.0.1:5180/uis/lantern-theatre/)
+- [Tideglass](http://127.0.0.1:5180/uis/tideglass/)
+- [The Painted Wild](http://127.0.0.1:5180/uis/painted-wild/)
+- [Rift Overdrive](http://127.0.0.1:5180/uis/rift-overdrive/)
+
 ## Test
 
 ```bash
 pnpm test            # vitest: core, gpu, shell, every interface's pure modules,
-                     #   every .wgsl file parsed after include expansion,
+                     #   every .wgsl file parsed and checked for portable vector writes,
                      #   and the live adapter against the real engine when linked
 pnpm typecheck       # root project, plus the engine-typed adapter when linked
-pnpm test:e2e        # Playwright in your installed Chrome with WebGPU on your GPU:
+pnpm test:e2e        # fresh build, installed Chrome's default WebGPU features on your GPU:
                      #   for every uis/*/ and every client, boots, renders 30+ frames,
-                     #   reads pixels back, takes an action, checks fps and a clean console
+                     #   checks shader compilation, GPU validation, gameplay and performance
+pnpm test:visual     # desktop/phone screenshot comparisons for Painted Wild and Rift Overdrive
+pnpm test:report     # open the last browser report: screenshots, compiler diagnostics, traces
 node scripts/screenshot-ui.mjs <slug> [mock|live] [out.png] [actionId,...]
-                     # with `pnpm preview` running: console log, GPU info, a screenshot
+                     # with `pnpm preview` running: GPU info and screenshot; fails on errors/blank output
 ```
 
 CI (`.github/workflows/ci.yml`) runs install, typecheck, unit tests and a mock
 build. The GPU gate is local by design: hosted runners have no usable WebGPU.
+The visual tests compare eight reviewed images covering arrival and the first
+action on desktop and phone. See [GPU and visual verification](docs/gpu-verification.md)
+for reviewing failures and deliberately updating the reference images. Do not add
+unsafe WebGPU flags: they enable experimental shader syntax and previously hid
+the shader errors that occurred in normal Chrome.
 
 ## Add an interface
 

@@ -111,6 +111,15 @@ export async function bootUi(spec: UiSpec): Promise<void> {
     const result = client.act(id);
     if (!result.ok) hud.notice(result.message, "error");
   };
+  // Validation failures are asynchronous. Surface the first one just like a
+  // thrown render error, so a running frame counter cannot hide a blank canvas.
+  gpu.device.addEventListener("uncapturederror", (event) => {
+    event.preventDefault();
+    if (hooks.error) return;
+    hooks.fail(event.error.message);
+    hud.notice(event.error.message, "error");
+    console.error(event.error.message);
+  });
   const mirror = mountA11yMirror(root, act);
 
   const ctx: UiContext = {
@@ -145,7 +154,7 @@ export async function bootUi(spec: UiSpec): Promise<void> {
   window.addEventListener("keydown", (event) => {
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
     const target = event.target as HTMLElement | null;
-    if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+    if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT")) return;
     const id = actionForKey(event.code, client.scene());
     if (id) {
       event.preventDefault();
