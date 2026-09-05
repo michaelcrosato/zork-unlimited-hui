@@ -6,7 +6,12 @@
  * Output: one byte per pixel, 128 at the contour, larger inside the shape,
  * smaller outside, saturating at ±`spread` pixels.
  */
-export function buildSdfFromAlpha(alpha: Uint8Array, width: number, height: number, spread: number): Uint8Array {
+export function buildSdfFromAlpha(
+  alpha: Uint8Array,
+  width: number,
+  height: number,
+  spread: number,
+): Uint8Array<ArrayBuffer> {
   if (alpha.length !== width * height) throw new Error("alpha length does not match width * height");
   const inside = (i: number) => alpha[i]! >= 128;
   const toInside = distanceTransform(width, height, inside);

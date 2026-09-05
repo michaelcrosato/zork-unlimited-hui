@@ -32,8 +32,18 @@ export function engineStatus() {
   return { root, present, overworld, packs };
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+/**
+ * "Linked" additionally requires this repo's live adapter to exist, so a build
+ * never points the alias at a file that is not there yet.
+ */
+export function engineLinked() {
   const status = engineStatus();
+  const adapter = resolve(here, "..", "packages", "core", "src", "zork", "adapter.ts");
+  return { ...status, linked: status.present && existsSync(adapter), adapter };
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  const status = engineLinked();
   console.log(JSON.stringify(status, null, 2));
-  process.exit(status.present ? 0 : 1);
+  process.exit(status.linked ? 0 : 1);
 }

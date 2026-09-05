@@ -1,4 +1,17 @@
 export { preprocessWgsl } from "./wgsl/include.ts";
+export { WGSL_LIBS } from "./wgsl/libs.ts";
 export { buildSdfFromAlpha } from "./text/sdf.ts";
 export { layoutText } from "./text/layout.ts";
 export type { GlyphPlacement, LayoutOptions, TextLayout } from "./text/layout.ts";
+export { TextAtlas } from "./text/atlas.ts";
+export type { GlyphInfo, TextAtlasOptions } from "./text/atlas.ts";
+export { TextRenderer, ALPHA_BLEND } from "./text/renderer.ts";
+export type { GlyphStyle, TextRendererOptions } from "./text/renderer.ts";
+export { createGpu } from "./device.ts";
+export type { CreateGpuOptions, Gpu, GpuSize } from "./device.ts";
+export { UniformBuffer } from "./uniforms.ts";
+export { FullscreenPass } from "./fullscreen.ts";
+export type { FullscreenPassOptions } from "./fullscreen.ts";
+export { PingPong } from "./pingpong.ts";
+export { ParticleSystem, ADDITIVE_BLEND, PREMULTIPLIED_OVER } from "./particles.ts";
+export type { ParticleParams } from "./particles.ts";

@@ -1,0 +1,150 @@
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #05070a;
+  color: #e9e6de;
+  font: 14px/1.4 system-ui, sans-serif;
+  overflow: hidden;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+}
+
+.hui-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: default;
+}
+
+.hui-canvas.is-pointing {
+  cursor: pointer;
+}
+
+/* Visually hidden, present for assistive technology and keyboard focus. */
+.hui-a11y {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hui-a11y button:focus-visible {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  width: auto;
+  height: auto;
+  clip: auto;
+  clip-path: none;
+  z-index: 10;
+  padding: 0.5rem 0.75rem;
+  background: #111b20;
+  color: #e9e6de;
+  border: 1px solid #74cbe2;
+}
+
+.hui-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.35rem 0.9rem;
+  background: linear-gradient(180deg, rgba(5, 7, 10, 0.85), rgba(5, 7, 10, 0));
+  font: 11px/1.2 "Cascadia Mono", Consolas, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #99a2a5;
+  pointer-events: none;
+}
+
+.hui-hud a,
+.hui-hud strong,
+.hui-hud span {
+  pointer-events: auto;
+}
+
+.hui-hud a {
+  color: #74cbe2;
+  text-decoration: none;
+}
+
+.hui-hud a:hover,
+.hui-hud a:focus-visible {
+  color: #fff;
+  outline: 1px solid #74cbe2;
+  outline-offset: 3px;
+}
+
+.hui-hud strong {
+  color: #e9e6de;
+  font-weight: 700;
+}
+
+.hui-hud nav {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.hui-hud-fps {
+  margin-left: auto;
+  color: #a7c875;
+}
+
+.hui-hud-notice {
+  color: #f29227;
+  text-transform: none;
+  letter-spacing: 0;
+  max-width: 40vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hui-hud-notice[data-tone="error"] {
+  color: #e85a4f;
+}
+
+.hui-fatal {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: #05070a;
+}
+
+.hui-fatal section {
+  max-width: 40rem;
+  border: 1px solid #f29227;
+  padding: 1.5rem;
+  font: 15px/1.55 Georgia, serif;
+}
+
+.hui-fatal h1 {
+  margin: 0 0 0.5rem;
+  font: 800 1.6rem/1.1 "Arial Narrow", "Roboto Condensed", sans-serif;
+  text-transform: uppercase;
+}
+
+.hui-fatal code {
+  font-family: "Cascadia Mono", Consolas, monospace;
+  color: #74cbe2;
+}

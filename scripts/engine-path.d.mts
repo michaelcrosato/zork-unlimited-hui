@@ -6,3 +6,8 @@ export interface EngineStatus {
 }
 export function engineRoot(): string;
 export function engineStatus(): EngineStatus;
+export interface EngineLink extends EngineStatus {
+  linked: boolean;
+  adapter: string;
+}
+export function engineLinked(): EngineLink;
