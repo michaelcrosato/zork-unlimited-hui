@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { fileURLToPath } from "node:url";
-import { listUis } from "../../build/gallery-plugin.ts";
+import { listUis } from "../../vite-plugins/gallery-plugin.ts";
 import { engineLinked } from "../../scripts/engine-path.mjs";
 
 const repoRoot = fileURLToPath(new URL("../..", import.meta.url));

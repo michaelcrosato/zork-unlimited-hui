@@ -76,8 +76,8 @@ export interface GameClient {
 ```
 package.json  pnpm-workspace.yaml  tsconfig.base.json  tsconfig.json
 vite.config.ts  vitest.config.ts  playwright.config.ts  index.html
-build/engine-plugin.ts        Vite plugin: @zork alias, virtual:zork-content, __ENGINE_AVAILABLE__
-build/gallery-plugin.ts       Vite plugin: virtual:hui-gallery from uis/*/ui.json
+vite-plugins/engine-plugin.ts        Vite plugin: @zork alias, virtual:zork-content, __ENGINE_AVAILABLE__
+vite-plugins/gallery-plugin.ts       Vite plugin: virtual:hui-gallery from uis/*/ui.json
 packages/core/src/{scene,client,humanize,index}.ts
 packages/core/src/mock/{mock-client,mock-world}.ts
 packages/core/src/zork/{adapter,adapter.stub,overworld-actions,quest-scene,story-scene,save,content}.ts

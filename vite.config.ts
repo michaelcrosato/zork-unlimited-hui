@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
-import { zorkEnginePlugin } from "./build/engine-plugin.ts";
-import { galleryPlugin } from "./build/gallery-plugin.ts";
+import { zorkEnginePlugin } from "./vite-plugins/engine-plugin.ts";
+import { galleryPlugin } from "./vite-plugins/gallery-plugin.ts";
 
 export default defineConfig({
   plugins: [zorkEnginePlugin(), galleryPlugin()],
