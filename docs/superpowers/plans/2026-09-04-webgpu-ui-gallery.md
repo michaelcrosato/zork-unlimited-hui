@@ -102,18 +102,18 @@ scripts/{new-ui.mjs,engine-path.mjs}
 
 **Files:** all root config files above, package.json for each of the three packages with empty `src/index.ts`, `index.html` gallery placeholder, `.github/workflows/ci.yml`, `LICENSE`, `README.md`.
 
-- [ ] Write configs (pnpm workspace with `packages/*`; root depends on `@hui/core|gpu|shell` via `workspace:*`).
-- [ ] `pnpm install`; `pnpm typecheck` passes on empty packages; `pnpm test` runs 0 tests without error.
-- [ ] Commit `chore: scaffold monorepo`, push `main`.
+- [x] Write configs (pnpm workspace with `packages/*`; root depends on `@hui/core|gpu|shell` via `workspace:*`).
+- [x] `pnpm install`; `pnpm typecheck` passes on empty packages; `pnpm test` runs 0 tests without error.
+- [x] Commit `chore: scaffold monorepo`, push `main`.
 
 ### Task 1: core — Scene, humanize, MockClient
 
 **Interfaces produced:** `Scene`, `Action`, `GameClient` (above); `humanizeId(id): string` ("relief_spear" → "Relief spear", "albany:road_warden" → "Road warden"); `createMockClient(seed?): GameClient`.
 
-- [ ] Test `humanize.test.ts`: underscores, colons, casing, already-human strings unchanged.
-- [ ] Test `mock-client.test.ts`: starts in `tutorial`; one act moves to `overworld` with ≥3 primary actions; scripted path reaches `story_choice`, `quest`, `engage` action present in a fight, `ending` non-null after finishing, `journey_choice` afterwards; `act('bogus')` returns `ok:false` and does not change `sceneId`; subscribe fires once per successful act; `reset()` returns to tutorial; `world` has ≥3 nodes and edges reference existing nodes.
-- [ ] Implement `scene.ts`, `client.ts` (a `SceneStore` helper with subscribe), `humanize.ts`, `mock/mock-world.ts` (data), `mock/mock-client.ts`.
-- [ ] Commit `feat(core): scene model, humanize, mock client`.
+- [x] Test `humanize.test.ts`: underscores, colons, casing, already-human strings unchanged.
+- [x] Test `mock-client.test.ts`: starts in `tutorial`; one act moves to `overworld` with ≥3 primary actions; scripted path reaches `story_choice`, `quest`, `engage` action present in a fight, `ending` non-null after finishing, `journey_choice` afterwards; `act('bogus')` returns `ok:false` and does not change `sceneId`; subscribe fires once per successful act; `reset()` returns to tutorial; `world` has ≥3 nodes and edges reference existing nodes.
+- [x] Implement `scene.ts`, `client.ts` (a `SceneStore` helper with subscribe), `humanize.ts`, `mock/mock-world.ts` (data), `mock/mock-client.ts`.
+- [x] Commit `feat(core): scene model, humanize, mock client`.
 
 ### Task 2: gpu — device, WGSL include, SDF text, passes, particles
 
@@ -128,17 +128,17 @@ scripts/{new-ui.mjs,engine-path.mjs}
 - `class PingPong { constructor(gpu, format, w, h); read; write; swap(); resize() }`.
 - `class ParticleSystem { constructor(gpu, count, wgsl); update(pass, params); draw(pass, view) }`.
 
-- [ ] Tests: `include.test.ts` (nested include, missing include throws, no double-inclusion); `sdf.test.ts` (inside pixels > 128, outside < 128, monotonic along a ray from a filled square); `layout.test.ts` (wraps at maxWidth using a fake measure of 10px/char; never splits a word wider than a line except when the word alone exceeds the width; newline paragraphs preserved; `glyphs` rects are within `maxWidth`); `wgsl-parse.test.ts` (glob every `**/*.wgsl` in the repo, preprocess with the lib map, `new WgslReflect(src)` does not throw, at least one entry point per file).
-- [ ] Implement the modules; canvas glyph rasterization uses `OffscreenCanvas` when present, else `document.createElement('canvas')`; unit tests never touch the GPU.
-- [ ] Commit `feat(gpu): device, sdf text, passes, particles, wgsl libs`.
+- [x] Tests: `include.test.ts` (nested include, missing include throws, no double-inclusion); `sdf.test.ts` (inside pixels > 128, outside < 128, monotonic along a ray from a filled square); `layout.test.ts` (wraps at maxWidth using a fake measure of 10px/char; never splits a word wider than a line except when the word alone exceeds the width; newline paragraphs preserved; `glyphs` rects are within `maxWidth`); `wgsl-parse.test.ts` (glob every `**/*.wgsl` in the repo, preprocess with the lib map, `new WgslReflect(src)` does not throw, at least one entry point per file).
+- [x] Implement the modules; canvas glyph rasterization uses `OffscreenCanvas` when present, else `document.createElement('canvas')`; unit tests never touch the GPU.
+- [x] Commit `feat(gpu): device, sdf text, passes, particles, wgsl libs`.
 
 ### Task 3: shell — boot, a11y mirror, input, hooks
 
 **Interfaces produced:** `bootUi(spec: { slug, title, render: (ctx: UiContext) => Promise<UiInstance> })`; `UiContext = { gpu, client, canvas, root, a11y }`; `UiInstance = { frame(dt, t): void, onScene(scene): void, hit?(x,y): string|null, destroy() }`. `window.__hui = { ready, frames, fps, scene(), act(id), sample(): Promise<{nonBlank, distinct}>, client }`.
 
-- [ ] Tests (jsdom): `a11y.test.ts` renders one `<button>` per primary action with the label and `aria-describedby` terms, updates on scene change, hidden visually but not from AT; `input.test.ts` maps `Digit1..9` to the nth primary action id, ignores when a disabled action is targeted, `Escape` clears focus; `hooks.test.ts` exposes `__hui` shape.
-- [ ] Implement; `hud.ts` draws the small top bar (UI switcher from `virtual:hui-gallery`, client toggle mock/live, fps) in DOM.
-- [ ] Commit `feat(shell): boot loop, accessibility mirror, input, e2e hooks`.
+- [x] Tests (jsdom): `a11y.test.ts` renders one `<button>` per primary action with the label and `aria-describedby` terms, updates on scene change, hidden visually but not from AT; `input.test.ts` maps `Digit1..9` to the nth primary action id, ignores when a disabled action is targeted, `Escape` clears focus; `hooks.test.ts` exposes `__hui` shape.
+- [x] Implement; `hud.ts` draws the small top bar (UI switcher from `virtual:hui-gallery`, client toggle mock/live, fps) in DOM.
+- [x] Commit `feat(shell): boot loop, accessibility mirror, input, e2e hooks`.
 
 ### Task 4: core — Zork adapter
 
@@ -151,36 +151,36 @@ Port of the engine UI's `App.tsx` orchestration (MIT), DOM-free:
 - `save.ts`: v2 journey save format compatible with the engine UI's `adventureforge:new-york-journey:v2` key semantics (road phase snapshot; quest phase = preQuestWorld + trail + content-bound quest save + world hash) with replay verification on load; failures → `phase: recovery` scene offering `meta` action `new-journey`.
 - `adapter.ts`: `ZorkClient` composes the above; `act(id)` dispatches by id prefix (`ow:`, `story:`, `journey:`, `q:`, `meta:`).
 
-- [ ] Test `zork-adapter.test.ts` (skips with a message when `ZORK_UNLIMITED_PATH` missing): fresh client is `tutorial`; `meta:start` → `overworld` at Albany with a `talk` action for Rowan Quill and a `travel` action; talking to Rowan yields `story_choice` with 4 options; choosing the first cycles through promise and report prompts back to `overworld`; moving to the Station exposes a `Dispatch` group; departing yields `quest` phase with `place.name` "The Steading Yard" and no raw ids in `place.kicker`/`vitals`; one accepted quest action changes `sceneId` or `result`; `save → new client from same storage` restores the same `sceneId` and `result` prefix "Resumed".
-- [ ] Implement; content loading via Vite virtual module in the browser and via direct `fs` read in the vitest test (test helper builds `ZorkContent` from the sibling path).
-- [ ] Commit `feat(core): zork-unlimited adapter with verified save/restore`.
+- [x] Test `zork-adapter.test.ts` (skips with a message when `ZORK_UNLIMITED_PATH` missing): fresh client is `tutorial`; `meta:start` → `overworld` at Albany with a `talk` action for Rowan Quill and a `travel` action; talking to Rowan yields `story_choice` with 4 options; choosing the first cycles through promise and report prompts back to `overworld`; moving to the Station exposes a `Dispatch` group; departing yields `quest` phase with `place.name` "The Steading Yard" and no raw ids in `place.kicker`/`vitals`; one accepted quest action changes `sceneId` or `result`; `save → new client from same storage` restores the same `sceneId` and `result` prefix "Resumed".
+- [x] Implement; content loading via Vite virtual module in the browser and via direct `fs` read in the vitest test (test helper builds `ZorkContent` from the sibling path).
+- [x] Commit `feat(core): zork-unlimited adapter with verified save/restore`.
 
 ### Task 5: UI 1 — Ink & Ember
 
-- [ ] Tests: `page.test.ts` (composes Scene into text blocks with roles heading/prose/dialogue/rubric and stable ordering; marginalia positions do not overlap prose column), `effects.test.ts` (`particleParams(scene)` maps danger 0→snow 0.15 density/no embers, danger 1→embers on; ending.death→`inkRun=1`).
-- [ ] Implement `wgsl/parchment.wgsl` (fbm paper + candle flicker + vignette), text via `TextRenderer` with per-glyph `t0` for wet-ink reveal, `wgsl/ink-post.wgsl` (distortion + grain + bleed), particles via `ParticleSystem` with `wgsl/embers.wgsl`.
-- [ ] Manual check in Chrome; commit `feat(ui): ink-and-ember`.
+- [x] Tests: `page.test.ts` (composes Scene into text blocks with roles heading/prose/dialogue/rubric and stable ordering; marginalia positions do not overlap prose column), `effects.test.ts` (`particleParams(scene)` maps danger 0→snow 0.15 density/no embers, danger 1→embers on; ending.death→`inkRun=1`).
+- [x] Implement `wgsl/parchment.wgsl` (fbm paper + candle flicker + vignette), text via `TextRenderer` with per-glyph `t0` for wet-ink reveal, `wgsl/ink-post.wgsl` (distortion + grain + bleed), particles via `ParticleSystem` with `wgsl/embers.wgsl`.
+- [x] Manual check in Chrome; commit `feat(ui): ink-and-ember`.
 
 ### Task 6: UI 2 — Cartographer
 
-- [ ] Tests: `projection.test.ts` (equirectangular lat/lon → plane preserves ordering, current node at origin when requested, bounds fit 247 nodes into a 200×200 plane), `camera.test.ts` (fly-to easing reaches target within duration; orbit keeps distance), `fog.test.ts` (visited nodes paint radius r, discovered r/2, others 0).
-- [ ] Implement compute heightfield (`terrain.wgsl`), terrain mesh + water, road ribbons (instanced quads along edges), pins (instanced), labels (billboard SDF text), fog texture, day/night uniforms from `vitals.time`, snow particles, GPU-text side panel with actions, click hit-test on pins for travel actions when a matching `travel` action exists.
-- [ ] Commit `feat(ui): cartographer`.
+- [x] Tests: `projection.test.ts` (equirectangular lat/lon → plane preserves ordering, current node at origin when requested, bounds fit 247 nodes into a 200×200 plane), `camera.test.ts` (fly-to easing reaches target within duration; orbit keeps distance), `fog.test.ts` (visited nodes paint radius r, discovered r/2, others 0).
+- [x] Implement compute heightfield (`terrain.wgsl`), terrain mesh + water, road ribbons (instanced quads along edges), pins (instanced), labels (billboard SDF text), fog texture, day/night uniforms from `vitals.time`, snow particles, GPU-text side panel with actions, click hit-test on pins for travel actions when a matching `travel` action exists.
+- [x] Commit `feat(ui): cartographer`.
 
 ### Task 7: UI 3 — Phosphor Diorama
 
-- [ ] Tests: `scene-params.test.ts` (exits → door mask bits N/E/S/W, enemies → red light count capped at 4, NPCs → warm lights, pressure max → fog 0..1, time → sun angle; death ending → glitch 1).
-- [ ] Implement `diorama.wgsl` (ray-marched chamber, lights, fog, sky), `terminal.ts` (offscreen GPU text of prose + numbered actions), `crt.wgsl` (barrel, scanlines, aberration, flicker, glitch), `bloom.wgsl` (half-res separable), phosphor feedback via `PingPong`.
-- [ ] Commit `feat(ui): phosphor-diorama`.
+- [x] Tests: `scene-params.test.ts` (exits → door mask bits N/E/S/W, enemies → red light count capped at 4, NPCs → warm lights, pressure max → fog 0..1, time → sun angle; death ending → glitch 1).
+- [x] Implement `diorama.wgsl` (ray-marched chamber, lights, fog, sky), `terminal.ts` (offscreen GPU text of prose + numbered actions), `crt.wgsl` (barrel, scanlines, aberration, flicker, glitch), `bloom.wgsl` (half-res separable), phosphor feedback via `PingPong`.
+- [x] Commit `feat(ui): phosphor-diorama`.
 
 ### Task 8: E2E on the GPU
 
-- [ ] `tests/e2e/uis.spec.ts`: for each `uis/*/ui.json`, open `/uis/<slug>/?client=mock`, expect `__hui.ready`, adapter present, frames > 30 within 5 s, `sample()` non-blank and > 16 distinct colors, first primary action via `__hui.act` changes `sceneId` or `result`, no `console.error`; if `__ENGINE_AVAILABLE__`, repeat with `?client=live` and assert `place.name` is "Albany City" after the tutorial.
-- [ ] Run `pnpm test:e2e` on this machine; fix defects; record fps.
-- [ ] Commit `test(e2e): webgpu smoke per ui`.
+- [x] `tests/e2e/uis.spec.ts`: for each `uis/*/ui.json`, open `/uis/<slug>/?client=mock`, expect `__hui.ready`, adapter present, frames > 30 within 5 s, `sample()` non-blank and > 16 distinct colors, first primary action via `__hui.act` changes `sceneId` or `result`, no `console.error`; if `__ENGINE_AVAILABLE__`, repeat with `?client=live` and assert `place.name` is "Albany City" after the tutorial.
+- [x] Run `pnpm test:e2e` on this machine; fix defects; record fps.
+- [x] Commit `test(e2e): webgpu smoke per ui`.
 
 ### Task 9: Gallery, scaffold script, docs, CI, push
 
-- [ ] `scripts/new-ui.mjs <slug>` copies a template UI; test by scaffolding `uis/_template-check` in a temp dir (not committed).
-- [ ] README: what this is, how to link the engine, run, add a UI, test; per-UI notes.
-- [ ] CI green on GitHub (unit + typecheck + mock build). Push.
+- [x] `scripts/new-ui.mjs <slug>` copies a template UI; test by scaffolding `uis/_template-check` in a temp dir (not committed).
+- [x] README: what this is, how to link the engine, run, add a UI, test; per-UI notes.
+- [x] CI green on GitHub (unit + typecheck + mock build). Push.
