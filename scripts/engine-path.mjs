@@ -38,7 +38,7 @@ export function engineStatus() {
  */
 export function engineLinked() {
   const status = engineStatus();
-  const adapter = resolve(here, "..", "packages", "core", "src", "zork", "adapter.ts");
+  const adapter = resolve(here, "..", "packages", "core", "src", "zork", "live", "adapter.ts");
   return { ...status, linked: status.present && existsSync(adapter), adapter };
 }
 

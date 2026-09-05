@@ -1,10 +1,10 @@
 // Dev helper: load one interface in headless Chrome with WebGPU, print console output and GPU info, save a screenshot.
-// Usage: node scripts/screenshot-ui.mjs <slug> [mock|live] [out.png] [actionId,actionId,...]  (needs `pnpm preview` running)
+// Usage: node scripts/screenshot-ui.mjs <slug> [mock|live] [out.png] [actionId,actionId,...]  (needs `pnpm preview` running; Playwright wipes test-results/, so screens/ is used)
 import { chromium } from "@playwright/test";
 
 const slug = process.argv[2] ?? "ink-and-ember";
 const client = process.argv[3] ?? "mock";
-const out = process.argv[4] ?? `test-results/screens/${slug}-${client}.png`;
+const out = process.argv[4] ?? `screens/${slug}-${client}.png`;
 const actions = (process.argv[5] ?? "").split(",").filter(Boolean);
 
 const browser = await chromium.launch({
